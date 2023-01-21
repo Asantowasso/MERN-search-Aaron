@@ -1,0 +1,5 @@
+Tasks-
+
+1. Update the auth middleware to work with the GraphQL API this will be done in auth.js
+
+2. Implement Apollo server and apply it to the Express server as middleware
