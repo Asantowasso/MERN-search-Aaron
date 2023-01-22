@@ -8,12 +8,12 @@ const { gql } = require('apollo-server-express');
 const typeDefs = gql`
   type Query {
     _id: ID!
+    
 
 
 
 
-
-  } 
+  }:User
   
 type mutation {
 login (email: String!, password: String!): Auth
