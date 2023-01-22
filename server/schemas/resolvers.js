@@ -1,70 +1,72 @@
-const { AuthenticationError } = require('apollo-server-express');
-const { User } = require ('../models');
+const { AuthenticationError } = require("apollo-server-express");
+const { User } = require("../models");
 
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        return awaitUser.findOne({_id: context.user._id});
+        return awaitUser.findOne({ _id: context.user._id });
       }
-      throw new AuthenticationError ('We cannot find that user')
-    }
+      throw new AuthenticationError("We cannot find that user");
+    },
   },
 
   Mutation: {
-    addUser: async (parent, {username, email, password}) => {
-      const User = await User.create({username, email, password});
+    addUser: async (parent, { username, email, password }) => {
+      const User = await User.create({ username, email, password });
       const token = signToken(User);
 
-      return{token, User};
+      return { token, User };
     },
-    login: async(parent, {username, password}) => {
+    login: async (parent, { username, password }) => {
       const User = await User.findOne({
-        username
+        username,
       });
 
-      if (!User){
-        throw new AuthenticationError('No User with this login found!');
+      if (!User) {
+        throw new AuthenticationError("No User with this login found!");
       }
 
       const correctPw = await profile.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError('Incorrect password')
+        throw new AuthenticationError("Incorrect password");
       }
 
       const token = signToken(profile);
-      return {token, profile};
-
+      return { token, profile };
     },
 
-    saveBook: async(parent,{bookInfo}, context) => {
-      if (context.user){
+    saveBook: async (parent, { bookInfo }, context) => {
+      if (context.user) {
         return User.findOneAndUpdate(
-          {_id: context.user._id},
+          { _id: context.user._id },
           {
-            $addToSet: {savedBooks: bookInfo}
-            
-
+            $addToSet: { savedBooks: bookInfo },
           },
           {
-          new:true,
-          runValidators: true
-        }
-
-
+            new: true,
+            runValidators: true,
+          }
         );
-
       }
+    },
 
-    }
-
-    
-
-
-  }
-  
-
-}
+    removeBook: async (parent, { bookId }, context) => {
+      if (context.user) {
+        return User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $pull: { savedBooks: bookId },
+          },
+          { new: true,
+            runValidators: true,
+          }
+        );
+      }
+      
+    },
+  },
+};
 
 module.exports = resolvers;
