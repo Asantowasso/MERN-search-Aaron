@@ -1,9 +1,14 @@
-const {Book, User} = require ('.../models');
-const { User } = require('../models');
+const { AuthenticationError } = require('apollo-server-express');
+const { User } = require ('../models');
 
 const resolvers = {
   Query: {
-
+    me: async (parent, args, context) => {
+      if (context.user) {
+        return awaitUser.findOne({_id: context.user._id});
+      }
+      throw new AuthenticationError ('We cannot find that user')
+    }
   },
 
   Mutation: {
@@ -31,7 +36,31 @@ const resolvers = {
       const token = signToken(profile);
       return {token, profile};
 
+    },
+
+    saveBook: async(parent,{bookInfo}, context) => {
+      if (context.user){
+        return User.findOneAndUpdate(
+          {_id: context.user._id},
+          {
+            $addToSet: {savedBooks: bookInfo}
+            
+
+          },
+          {
+          new:true,
+          runValidators: true
+        }
+
+
+        );
+
+      }
+
     }
+
+    
+
 
   }
   
