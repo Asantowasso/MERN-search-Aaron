@@ -4,10 +4,8 @@ const path = require('path');
 const {typeDefs, resolvers} = require ('./schemas') //Calling on typeDefs and Resolvers
 
 const db = require('./config/connection');
-// const { server } = require('http');
 const { authMiddleware } = require('./utils/auth');
 
-// const routes = require('./routes');(old)
 
 
 const PORT = process.env.PORT || 3001;
@@ -35,7 +33,6 @@ const startApolloServer = async (typeDefs, resolvers) => {
 
 
 
-// app.use(routes);
 
 db.once('open', () => {
   app.listen(PORT, () => {console.log(`🌍 Now listening on localhost:${PORT}`);

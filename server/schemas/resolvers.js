@@ -18,7 +18,7 @@ const resolvers = {
 
       return { token, User };
     },
-    login: async (parent, { username, password }) => {
+    loginUser: async (parent, { username, password }) => {
       const User = await User.findOne({
         username,
       });
