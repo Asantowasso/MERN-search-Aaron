@@ -1,5 +1,6 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { User } = require("../models");
+const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
@@ -18,53 +19,52 @@ const resolvers = {
 
       return { token, User };
     },
-    loginUser: async (parent, { username, password }) => {
+    login: async (parent, { email, password }) => {
       const User = await User.findOne({
-        username,
+        email,
       });
 
       if (!User) {
         throw new AuthenticationError("No User with this login found!");
       }
 
-      const correctPw = await profile.isCorrectPassword(password);
+      const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
         throw new AuthenticationError("Incorrect password");
       }
 
-      const token = signToken(profile);
-      return { token, profile };
+      const token = signToken(user);
+      return { token, user };
     },
 
-    saveBook: async (parent, { bookInfo }, context) => {
+    saveBook: async (parent, { bookData }, context) => {
       if (context.user) {
-        return User.findOneAndUpdate(
+        const updatedUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
-          {
-            $addToSet: { savedBooks: bookInfo },
-          },
-          {
-            new: true,
-            runValidators: true,
-          }
+          { $push: { savedBooks: bookData } },
+          { new: true }
         );
+        return updatedUser
+        
       }
+      throw new AuthenticationError ("Please login")
     },
 
     removeBook: async (parent, { bookId }, context) => {
       if (context.user) {
-        return User.findOneAndUpdate(
+        const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
           {
             $pull: { savedBooks: bookId },
           },
           { new: true,
-            runValidators: true,
+            
           }
         );
+        return updatedUser
       }
-      
+      throw new AuthenticationError ("Please login")
     },
   },
 };
