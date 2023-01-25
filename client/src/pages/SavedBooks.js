@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 import { GET_ME } from '../../../server/utils/queries';
+import { useQuery } from '@apollo/client';
+
 
 import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
@@ -12,7 +14,7 @@ const SavedBooks = () => {
   // use this to determine if `useEffect()` hook needs to run again
   const userDataLength = Object.keys(userData).length;
 
-  useEffect(() => {
+  useQuery(() => {
     const getUserData = async () => {
       try {
         const token = Auth.loggedIn() ? Auth.getToken() : null;
