@@ -7,14 +7,14 @@ query getMe {
     username
     email
     bookCount
-    savedBooks [
+    savedBooks {
       _id
       authors
       title
       image
       link
 
-    ]
+    }
   }
 
 }

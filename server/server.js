@@ -4,7 +4,7 @@ const path = require('path');
 const {typeDefs, resolvers} = require ('./schemas') //Calling on typeDefs and Resolvers
 
 const db = require('./config/connection');
-// const { authMiddleware } = require('./utils/auth');
+const { authMiddleware } = require('./utils/auth');
 
 
 
@@ -13,7 +13,7 @@ const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  // context: authMiddleware,
+  context: authMiddleware,
 })
 
 app.use(express.urlencoded({ extended: false }));

@@ -14,10 +14,10 @@ const resolvers = {
 
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
-      const User = await User.create({ username, email, password });
-      const token = signToken(User);
+      const user = await User.create({ username, email, password });
+      const token = signToken(user);
 
-      return { token, User };
+      return { token, user };
     },
     login: async (parent, { email, password }) => {
       const User = await User.findOne({

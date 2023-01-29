@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
-import { GET_ME } from '../../../server/utils/queries';
+import { GET_ME } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 
 
